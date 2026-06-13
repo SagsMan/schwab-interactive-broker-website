@@ -8,7 +8,21 @@ if (php_sapi_name() === 'cli-server') {
 }
 
 session_start();
-define('ROOT', dirname(__DIR__));
+
+// Smart ROOT detection — works whether index.php lives in:
+//   ~/schwabinteractivebroker.com/  (addon domain root, direct under home)
+//   ~/public_html/schwabinteractivebroker.com/  (inside public_html)
+//   ~/public_html/  (main domain)
+$_searchRoot = __DIR__;
+$_appRoot    = null;
+for ($i = 0; $i < 4; $i++) {
+    $_searchRoot = dirname($_searchRoot);
+    if (is_dir($_searchRoot . '/app/views') || is_dir($_searchRoot . '/app/config')) {
+        $_appRoot = $_searchRoot;
+        break;
+    }
+}
+define('ROOT', $_appRoot ?? dirname(__DIR__));
 
 // Load cPanel/MySQL env config if present (created by install.php or manually)
 $_envFile = ROOT . '/app/config/env.php';
