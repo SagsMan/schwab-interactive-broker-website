@@ -9,6 +9,11 @@ if (php_sapi_name() === 'cli-server') {
 
 session_start();
 define('ROOT', dirname(__DIR__));
+
+// Load cPanel/MySQL env config if present (created by install.php or manually)
+$_envFile = ROOT . '/app/config/env.php';
+if (file_exists($_envFile)) require_once $_envFile;
+
 require_once ROOT . '/app/config/database.php';
 
 // ─────────────────────────────────────────────────────────────────────────────
