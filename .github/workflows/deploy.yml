@@ -8,23 +8,25 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: FTP Deploy to sugarmummyconnect.net
+    name: FTP Deploy to schwabinteractivebroker.com
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy public/ → public_html/
+      # public/ → ~/schwabinteractivebroker.com/  (addon domain web root)
+      - name: Deploy public/ → schwabinteractivebroker.com/
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server:     ${{ secrets.FTP_SERVER }}
           username:   ${{ secrets.FTP_USERNAME }}
           password:   ${{ secrets.FTP_PASSWORD }}
           local-dir:  ./public/
-          server-dir: /public_html/
+          server-dir: /schwabinteractivebroker.com/
           dangerous-clean-slate: false
           log-level: verbose
 
+      # app/ → ~/app/  (one level above web root, not web-accessible)
       - name: Deploy app/ → ~/app/
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
